@@ -1,0 +1,73 @@
+# 医学影像修复模型配置
+# ====================
+# 适用场景: X光、CT、MRI、超声等医学影像修复
+
+model:
+  # CRA修复分支配置
+  cra_input_size: 512
+  cra_channels: [32, 64, 128]
+  cra_num_res_blocks: 8
+  use_gated_conv: true
+  attention_type: "SOFT"
+
+  # SRGAN超分分支配置
+  srgan_upscale_factor: 2                # 医学影像通常2倍超分足够
+  srgan_num_res_blocks: 16
+  srgan_channels: 64
+
+  # 融合模块配置
+  fusion_type: "attention"
+  use_edge_aware_module: true            # 边缘对病灶区域很重要
+  use_texture_enhancement: false         # 医学影像不需要纹理增强
+
+training:
+  # 基础训练参数
+  batch_size: 4
+  learning_rate: 0.00005                 # 较低学习率,保证稳定性
+  total_epochs: 200
+
+  # 损失权重 - 医学影像优化配置
+  # 核心: 高像素精度,最小化GAN影响
+  l1_weight: 2.0                         # 增加L1权重,保证像素精度
+  perceptual_weight: 0.05                # 降低感知损失
+  style_weight: 0.01                     # 最小化风格损失
+  adversarial_weight: 0.0001             # 最小化对抗损失
+  edge_weight: 0.2                       # 增加边缘损失 (保护病灶边界)
+
+  # 修复区域权重
+  in_hole_weight: 1.0
+  context_weight: 1.0
+
+  # 优化器配置
+  optimizer: "Adam"
+  beta1: 0.9                             # 使用更稳定的动量参数
+  beta2: 0.999
+
+  # 数据增强 - 医学影像轻微增强
+  random_crop: false                     # 医学影像不随机裁剪
+  random_flip: true                      # 仅水平翻转
+  random_rotation: false                 # 不旋转
+  color_jitter: false                    # 不调整颜色
+
+dataset:
+  train_image_dir: "./datasets/medical/train/images"
+  train_mask_dir: "./datasets/medical/train/masks"
+  val_image_dir: "./datasets/medical/val/images"
+  val_mask_dir: "./datasets/medical/val/masks"
+
+  hr_size: [1024, 1024]
+  lr_size: [512, 512]
+  mask_ratio_range: [0.05, 0.3]          # 医学影像通常破损较小
+
+inference:
+  use_tile_inference: true
+  tile_size: 512
+  tile_overlap: 32
+
+experiment:
+  experiment_name: "medical_v1"
+  save_dir: "./checkpoints/medical"
+  log_dir: "./logs/medical"
+  save_frequency: 20
+  eval_frequency: 5
+

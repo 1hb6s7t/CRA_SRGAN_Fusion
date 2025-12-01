@@ -1,0 +1,47 @@
+# CRA-SRGAN Fusion Model Requirements
+# Python 3.8+
+# ==========================================
+
+# MindSpore深度学习框架
+# GPU版本 (CUDA 11.x)
+mindspore>=2.2.0
+# Ascend版本请使用: mindspore-ascend>=2.2.0
+
+# 数值计算
+numpy>=1.21.0
+scipy>=1.7.0
+
+# 图像处理
+opencv-python>=4.5.0
+opencv-python-headless>=4.5.0    # 服务器环境
+Pillow>=8.0.0
+scikit-image>=0.18.0
+albumentations>=1.0.0             # 高级数据增强
+
+# 医学影像处理 (可选)
+pydicom>=2.3.0                    # DICOM格式支持
+nibabel>=3.2.0                    # NIfTI格式支持 (脑部MRI)
+SimpleITK>=2.1.0                  # 医学影像工具包
+
+# 数据处理
+pandas>=1.3.0
+
+# 可视化
+matplotlib>=3.4.0
+tensorboard>=2.6.0
+seaborn>=0.11.0
+
+# 进度条
+tqdm>=4.62.0
+
+# 配置管理
+PyYAML>=5.4.0
+omegaconf>=2.1.0
+
+# 评价指标 (需要PyTorch作为后端)
+# lpips>=0.1.4
+# pytorch-fid>=0.2.0
+
+# 工具
+colorama>=0.4.4
+rich>=10.0.0                      # 美化终端输出

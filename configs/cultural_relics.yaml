@@ -1,0 +1,73 @@
+# 文物修复模型配置
+# ==================
+# 适用场景: 古画、壁画、青铜器照片、文物修复
+
+model:
+  # CRA修复分支配置
+  cra_input_size: 512                    # 输入分辨率
+  cra_channels: [32, 64, 128]            # 编码器通道数
+  cra_num_res_blocks: 8                  # 残差块数量
+  use_gated_conv: true                   # 使用门控卷积
+  attention_type: "SOFT"                 # 注意力类型
+
+  # SRGAN超分分支配置
+  srgan_upscale_factor: 4                # 上采样倍数 (文物通常不需要8K)
+  srgan_num_res_blocks: 16               # SRGAN残差块数量
+  srgan_channels: 64                     # 基础通道数
+
+  # 融合模块配置
+  fusion_type: "attention"               # 注意力融合
+  use_edge_aware_module: true            # 边缘感知增强 (对纹理很重要)
+  use_texture_enhancement: true          # 纹理增强模块
+
+training:
+  # 基础训练参数
+  batch_size: 4
+  learning_rate: 0.0001
+  total_epochs: 300
+
+  # 损失权重 - 文物修复优化配置
+  l1_weight: 1.0                         # L1重建损失
+  perceptual_weight: 0.2                 # 感知损失 (保留整体风格)
+  style_weight: 0.15                     # 风格损失 (保留纹理特征)
+  adversarial_weight: 0.0005             # 对抗损失 (较小,保持稳定)
+  edge_weight: 0.15                      # 边缘一致性损失
+
+  # 修复区域权重
+  in_hole_weight: 1.5                    # 加强修复区域约束
+  context_weight: 1.0                    # 上下文约束
+
+  # 优化器配置
+  optimizer: "Adam"
+  beta1: 0.5
+  beta2: 0.9
+
+  # 数据增强
+  random_crop: true
+  random_flip: true
+  random_rotation: true
+  color_jitter: false                    # 文物保持原色,关闭颜色抖动
+
+dataset:
+  train_image_dir: "./datasets/cultural_relics/train/images"
+  train_mask_dir: "./datasets/cultural_relics/train/masks"
+  val_image_dir: "./datasets/cultural_relics/val/images"
+  val_mask_dir: "./datasets/cultural_relics/val/masks"
+
+  # 数据处理
+  hr_size: [2048, 2048]                  # 高分辨率目标尺寸
+  lr_size: [512, 512]                    # 低分辨率输入尺寸
+  mask_ratio_range: [0.1, 0.4]           # 破损区域比例范围
+
+inference:
+  use_tile_inference: true               # 大图分块推理
+  tile_size: 512
+  tile_overlap: 64
+
+experiment:
+  experiment_name: "cultural_relics_v1"
+  save_dir: "./checkpoints/cultural_relics"
+  log_dir: "./logs/cultural_relics"
+  save_frequency: 20
+  eval_frequency: 10
+
