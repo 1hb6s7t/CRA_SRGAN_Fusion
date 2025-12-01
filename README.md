@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CRA-SRGAN: 图像修复与超高清化一体化模型
 
 [![MindSpore](https://img.shields.io/badge/MindSpore-2.2+-blue.svg)](https://www.mindspore.cn/)
@@ -255,3 +256,17 @@ CRA_SRGAN_Fusion/
 
 Apache License 2.0
 
+=======
+# CRA_SRGAN_Fusion
+
+
+
+
+如果本平台对您的科研工作提供了帮助，可在论文致谢中加入：
+英文版：Thanks for the support provided by OpenI Community (https://openi.pcl.ac.cn).
+中文版：感谢启智社区提供的技术支持(https://openi.pcl.ac.cn)。
+  
+  
+如果您的成果中引用了本平台，也欢迎在下述开源项目中提交您的成果信息：
+https://openi.pcl.ac.cn/OpenIOSSG/references
+>>>>>>> 08d3e72fc9420ccec5942d7bc67c1617a1f5f573
